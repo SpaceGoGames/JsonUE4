@@ -3,6 +3,7 @@
 #include "JsonObjectBP.h"
 #include "JsonValueBP.h"
 #include "JsonTypes.h"
+#include "JsonFactory.h"
 #include "Serialization/JsonSerializer.h"
 
 //
@@ -158,6 +159,18 @@ void UJsonObjectBP::SetField(const FString& FieldName, UJsonValueBP* JsonValue)
 	{
 		JsonPtr->SetField(FieldName, JsonValue->GetValue());
 	}
+}
+
+UJsonValueBP* UJsonObjectBP::AsValue() const
+{
+	if (JsonPtr.IsValid())
+	{
+		auto newValue = NewObject<UJsonValueBP>();
+		FJsonValuePtr jsonValue = MakeShareable(new FJsonValueObject(JsonPtr));
+		newValue->SetValue(jsonValue);
+		return newValue;
+	}
+	return nullptr;
 }
 
 float UJsonObjectBP::GetFloat(const FString& FieldName, float DefaultValue) const
@@ -400,5 +413,29 @@ void UJsonObjectBP::SetObjectArray(const FString& FieldName, const TArray<UJsonO
 			EntriesArray.Add(MakeShareable(new FJsonValueObject(Object->GetObject())));
 		}
 		JsonPtr->SetArrayField(FieldName, EntriesArray);
+	}
+}
+
+UJsonArrayBP* UJsonObjectBP::GetArray(const FString& FieldName) const
+{
+	if (JsonPtr.IsValid() && !FieldName.IsEmpty())
+	{
+
+		TSharedPtr<FJsonValue> NewVal = JsonPtr->TryGetField(FieldName);
+		if (NewVal.IsValid() && NewVal->Type == EJson::Array)
+		{
+			auto newArray = UJsonFactory::NewJsonArray();
+			newArray->SetValue(NewVal);
+			return newArray;
+		}
+	}
+	return nullptr;
+}
+
+void UJsonObjectBP::SetArray(const FString& FieldName, UJsonArrayBP* Value)
+{
+	if (JsonPtr.IsValid() && !FieldName.IsEmpty() && Value->GetValue().IsValid())
+	{
+		JsonPtr->SetArrayField(FieldName, Value->GetValue()->AsArray());
 	}
 }

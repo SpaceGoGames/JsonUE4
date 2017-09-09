@@ -59,6 +59,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Json")
 	void SetField(const FString& FieldName, UJsonValueBP* JsonValue);
 
+	UFUNCTION(BlueprintCallable, Category = "Json")
+	UJsonValueBP* AsValue() const;
+
 	//
 	// Field Access API
 	//
@@ -107,6 +110,8 @@ public:
 	// Array properties
 	//
 
+
+
 	/** Get an array of float values */
 	UFUNCTION(BlueprintCallable, Category = "Json")
 	TArray<float> GetFloatArray(const FString& FieldName) const;
@@ -138,6 +143,14 @@ public:
 	/** Set an array of JsonObject values */
 	UFUNCTION(BlueprintCallable, Category = "Json")
 	void SetObjectArray(const FString& FieldName, const TArray<UJsonObjectBP*>& Value);
+
+	/** Get a JsonArray object */
+	UFUNCTION(BlueprintCallable, Category = "Json")
+	UJsonArrayBP* GetArray(const FString& FieldName) const;
+
+	/** Set a JsonArray object */
+	UFUNCTION(BlueprintCallable, Category = "Json")
+	void SetArray(const FString& FieldName, UJsonArrayBP* Value);
 
 private:
 	FJsonObjectPtr JsonPtr;
