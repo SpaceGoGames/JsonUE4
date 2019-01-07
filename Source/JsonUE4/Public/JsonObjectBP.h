@@ -17,7 +17,6 @@ public:
 	UJsonObjectBP();
 
 	/** Clear the whole object */
-	UFUNCTION(BlueprintCallable, Category = "Json")
 	virtual void Clear() override;
 
 	virtual bool SetValue(FJsonValuePtr JsonValue) override;
@@ -25,11 +24,9 @@ public:
 	void SetObject(FJsonObjectPtr JsonObject);
 
 	/** Encode into a JSON string*/
-	UFUNCTION(BlueprintCallable, Category = "Json")
 	virtual FString Encode(bool bPretty = false) const override;
 
 	/** Decode from a JSON string */
-	UFUNCTION(BlueprintCallable, Category = "Json")
 	virtual bool Decode(const FString& JsonString) override;
 
 	//
