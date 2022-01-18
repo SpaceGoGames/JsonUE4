@@ -8,6 +8,7 @@ namespace UnrealBuildTool.Rules
     {
         public JsonUE4(ReadOnlyTargetRules Target) : base(Target)
         {
+            PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
             PrivateIncludePaths.Add("JsonUE4/Private");
             
             PrivateDependencyModuleNames.AddRange(

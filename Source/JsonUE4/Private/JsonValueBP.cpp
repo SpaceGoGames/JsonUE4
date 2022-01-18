@@ -45,28 +45,28 @@ EJsonType UJsonValueBP::GetType() const
 
 FName UJsonValueBP::GetTypeAsName() const
 {
-	static FName NoneName("None");
-	static FName NullName("Null");
-	static FName StringName("String");
-	static FName NumberName("Number");
-	static FName BooleanName("Boolean");
-	static FName ArrayName("Array");
-	static FName ObjectName("Object");
+	static FName InvalidName(TEXT("None"));
+	static FName NullName(TEXT("Null"));
+	static FName StringName(TEXT("String"));
+	static FName NumberName(TEXT("Number"));
+	static FName BooleanName(TEXT("Boolean"));
+	static FName ArrayName(TEXT("Array"));
+	static FName ObjectName(TEXT("Object"));
 	if (JsonPtr.IsValid())
 	{
 		switch (JsonPtr->Type)
 		{
-		case EJson::None: return NoneName;
+		case EJson::None: return InvalidName;
 		case EJson::Null: return NullName;
 		case EJson::String: return StringName;
 		case EJson::Number: return NumberName;
 		case EJson::Boolean: return BooleanName;
 		case EJson::Array: return ArrayName;
 		case EJson::Object: return ObjectName;
-		default: return NoneName;
+		default: return InvalidName;
 		}
 	}	
-	return NoneName;
+	return InvalidName;
 }
 
 bool UJsonValueBP::IsNone() const

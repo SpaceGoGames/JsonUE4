@@ -129,24 +129,34 @@ UJsonValueBP* UJsonObjectBP::GetFieldRecursive(const FString& FieldName)
 		TArray<FString> KeyList;
 		FieldName.ParseIntoArray(KeyList, TEXT("."), true);
 
-		TSharedPtr<FJsonValue> CurrentObj = MakeShareable(new FJsonValueObject(JsonPtr));
+		TSharedPtr<FJsonValue> CurrentValue = nullptr;
+		TSharedPtr<FJsonObject> CurrentObject = JsonPtr;
 		for (auto i = 0; i < KeyList.Num(); i++)
 		{
-			auto CurrentName = KeyList[i];
-			auto Field = JsonPtr->TryGetField(CurrentName);
-			if (Field.IsValid())
-			{
-				CurrentObj = Field;
-			}
-			else
+			auto CurrentKey = KeyList[i];
+
+			// Get field
+			CurrentValue = CurrentObject->TryGetField(CurrentKey);
+			if (!CurrentValue.IsValid())
 			{
 				return nullptr;
 			}
+
+			// Prepare for next field
+			if (i < KeyList.Num() - 1)
+			{
+				// Get next
+				CurrentObject = CurrentValue->AsObject();
+				if (!CurrentObject.IsValid())
+				{
+					return nullptr;
+				}
+			}
 		}
-		if (CurrentObj.IsValid())
+		if (CurrentValue.IsValid())
 		{
 			UJsonValueBP* NewValue = NewObject<UJsonValueBP>();
-			NewValue->SetValue(CurrentObj);
+			NewValue->SetValue(CurrentValue);
 			return NewValue;
 		}
 	}
